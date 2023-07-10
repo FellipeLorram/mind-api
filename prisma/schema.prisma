@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  name      String?
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Patient   Patient[]
+
+  @@map("users")
+}
+
+model Patient {
+  id          String   @id @default(uuid())
+  name        String
+  address     String
+  age         Int
+  email       String   @unique
+  gender      String
+  observation String
+  nationality String
+  birthDate   DateTime
+  phones      Phone[]
+
+  modality             String
+  appointment_duration Int
+  appointment_time     DateTime
+
+  customFields CustomField[]
+  appointments Appointment[]
+  user         User          @relation(fields: [user_id], references: [id])
+  user_id      String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Note      Note[]
+
+  @@map("patients")
+}
+
+model Phone {
+  number     String  @unique
+  patient    Patient @relation(fields: [patient_id], references: [id])
+  patient_id String
+
+  @@map("phones")
+}
+
+model CustomField {
+  id         String  @id @default(uuid())
+  name       String
+  value      String
+  patient    Patient @relation(fields: [patient_id], references: [id])
+  patient_id String
+
+  @@map("custom_fields")
+}
+
+model Appointment {
+  id         String  @id @default(uuid())
+  patient    Patient @relation(fields: [patient_id], references: [id])
+  patient_id String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Note      Note[]
+
+  @@map("appointments")
+}
+
+model Note {
+  id          String      @id @default(uuid())
+  patient     Patient     @relation(fields: [patient_id], references: [id])
+  patient_id  String
+  appointment Appointment @relation(fields: [appointment_id], references: [id])
+  appointment_id String
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("notes")
+}
+ 

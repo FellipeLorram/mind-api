@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  api-gireh-pg:
+    image: bitnami/postgresql
+    container_name: api-gireh-pg
+    environment:
+      - POSTGRESQL_USERNAME=fellipe
+      - POSTGRESQL_PASSWORD=38953460
+      - POSTGRESQL_DATABASE=gireh-pg
+    ports:
+      - 5432:5432
+      
