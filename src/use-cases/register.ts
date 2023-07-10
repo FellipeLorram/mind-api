@@ -8,7 +8,7 @@ interface RegisterUseCaseResponse {
 }
 
 export class RegisterUseCase {
-	constructor(private userRepository: UserRepository) {}
+	constructor(private userRepository: UserRepository) { }
 
 	async execute(data: Prisma.UserCreateInput): Promise<RegisterUseCaseResponse> {
 		const userAlreadyExists = await this.userRepository.findByEmail(data.email);
@@ -24,6 +24,6 @@ export class RegisterUseCase {
 			password: passwordHash,
 		});
 
-		return {user};
+		return { user };
 	}
 }
