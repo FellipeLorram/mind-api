@@ -23,15 +23,15 @@ model User {
 }
 
 model Patient {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   name        String
-  address     String
+  address     String?
   age         Int
-  email       String   @unique
-  gender      String
-  observation String
-  nationality String
-  birthDate   DateTime
+  email       String?   @unique
+  gender      String?
+  observation String?
+  nationality String?
+  birthDate   DateTime?
   phones      Phone[]
 
   modality             String
@@ -81,15 +81,14 @@ model Appointment {
 }
 
 model Note {
-  id          String      @id @default(uuid())
-  patient     Patient     @relation(fields: [patient_id], references: [id])
-  patient_id  String
-  appointment Appointment @relation(fields: [appointment_id], references: [id])
+  id             String      @id @default(uuid())
+  patient        Patient     @relation(fields: [patient_id], references: [id])
+  patient_id     String
+  appointment    Appointment @relation(fields: [appointment_id], references: [id])
   appointment_id String
 
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("notes")
 }
- 

@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { AuthenticateUserUseCase } from './authenticate';
+import { AuthenticateUserUseCase } from '../authenticate';
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository';
 import { hash } from 'bcryptjs';
-import { InavalidCredentialsError } from './errors/invalid-credentials-error';
+import { InavalidCredentialsError } from '../errors/invalid-credentials-error';
 
 let sut: AuthenticateUserUseCase;
 let userRepository: InMemoryUsersRepository;
 
-describe('AuthenticateUserUseCase', () => {
+describe('Authenticate User Use Case', () => {
 	beforeEach(() => {
 		userRepository = new InMemoryUsersRepository();
 		sut = new AuthenticateUserUseCase(userRepository);
@@ -31,7 +31,7 @@ describe('AuthenticateUserUseCase', () => {
 	});
 
 	it('should not authenticate a user with wrong email', async () => {
-		expect(() => sut.execute({
+		await expect(() => sut.execute({
 			email: 'johndoe@example.com',
 			password: '123456'
 		})).rejects.toBeInstanceOf(InavalidCredentialsError);
@@ -47,7 +47,7 @@ describe('AuthenticateUserUseCase', () => {
 			password: await hash('123456', 6)
 		});
 
-		expect(() => sut.execute({
+		await expect(() => sut.execute({
 			email,
 			password: 'wrong-password'
 		})).rejects.toBeInstanceOf(InavalidCredentialsError);
