@@ -35,6 +35,10 @@ export class InMemoryPatientsRepository implements PatientRepository {
 	async update(id: string, patient: Prisma.PatientUncheckedUpdateInput) {
 		const patientIndex = this.patients.findIndex((patient) => patient.id === id);
 
+		if (patientIndex < 0) {
+			throw new Error('Patient not found');
+		}
+
 		this.patients[patientIndex] = {
 			...this.patients[patientIndex],
 			address: patient.address ? patient.address as string : this.patients[patientIndex].address,
@@ -53,9 +57,14 @@ export class InMemoryPatientsRepository implements PatientRepository {
 		return this.patients[patientIndex];
 	}
 
-	async findByEmail(email: string) {
-		const user = this.patients.find((user) => user.email === email);
-		return user || null;
+	async delete(id: string) {
+		const patientIndex = this.patients.findIndex((patient) => patient.id === id);
+
+		if (patientIndex < 0) {
+			throw new Error('Patient not found');
+		}
+
+		this.patients.splice(patientIndex, 1);
 	}
 
 	async findById(id: string) {

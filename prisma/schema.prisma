@@ -43,9 +43,9 @@ model Patient {
   user         User          @relation(fields: [user_id], references: [id])
   user_id      String
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Note      Note[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  detachedNote DetachedNote[]
 
   @@map("patients")
 }
@@ -81,9 +81,8 @@ model Appointment {
 }
 
 model Note {
+  content        String
   id             String      @id @default(uuid())
-  patient        Patient     @relation(fields: [patient_id], references: [id])
-  patient_id     String
   appointment    Appointment @relation(fields: [appointment_id], references: [id])
   appointment_id String
 
@@ -91,4 +90,17 @@ model Note {
   updatedAt DateTime @updatedAt
 
   @@map("notes")
+}
+
+model DetachedNote {
+  content String
+  id      String @id @default(uuid())
+
+  patient    Patient @relation(fields: [patient_id], references: [id])
+  patient_id String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("detached_notes")
 }

@@ -31,4 +31,12 @@ export class PrismaPatientRepository implements PatientRepository {
 
 		return patient;
 	}
+
+	async delete(id: string) {
+		await prisma.patient.delete({
+			where: {
+				id,
+			},
+		});
+	}
 }

@@ -1,9 +1,10 @@
 import { PatientRepository } from '@/repositories/patient-repository';
 import { Patient } from '@prisma/client';
+import { ResourceNotFoundError } from './errors/resource-not-found-error';
+import { InavalidUserError } from './errors/invalid-user-error';
 
-interface UpdatePatientUseCaseRequest {
-	patientId: string;
-	name: string
+interface UpdateData {
+	name?: string
 	address?: string | null
 	age?: number
 	email?: string | null
@@ -11,9 +12,15 @@ interface UpdatePatientUseCaseRequest {
 	observation?: string | null
 	nationality?: string | null
 	birthDate?: Date | string
-	modality: string | null
-	appointment_duration?: number 
-	appointment_time?: Date | string 
+	modality?: string | null
+	appointment_duration?: number
+	appointment_time?: Date | string
+}
+
+interface UpdatePatientUseCaseRequest {
+	userId: string;
+	patientId: string;
+	data: UpdateData;
 }
 
 interface UpdatePatientUseCaseResponse {
@@ -25,8 +32,18 @@ export class UpdatePatientUseCase {
 		private patientRepository: PatientRepository,
 	) { }
 
-	async execute(data: UpdatePatientUseCaseRequest): Promise<UpdatePatientUseCaseResponse> {
-		const patient = await this.patientRepository.update(data.patientId, {
+	async execute({ userId, patientId, data }: UpdatePatientUseCaseRequest): Promise<UpdatePatientUseCaseResponse> {
+		const patientExists = await this.patientRepository.findById(patientId);
+
+		if (!patientExists) {
+			throw new ResourceNotFoundError();
+		}
+
+		if(patientExists.user_id !== userId) {
+			throw new InavalidUserError();
+		}
+
+		const patient = await this.patientRepository.update(patientId, {
 			name: data.name,
 			address: data.address,
 			age: data.age,
@@ -39,6 +56,5 @@ export class UpdatePatientUseCase {
 		return {
 			patient
 		};
-
 	}
 }

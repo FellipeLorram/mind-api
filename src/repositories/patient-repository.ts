@@ -4,5 +4,5 @@ export interface PatientRepository {
 	findById(id: string): Promise<Patient | null>;
 	create(patient: Prisma.PatientUncheckedCreateInput): Promise<Patient>;
 	update(patientid: string, patient: Prisma.PatientUncheckedUpdateInput): Promise<Patient>;
-	// delete(id: string): Promise<void>;
+	delete(id: string): Promise<void>;
 }
