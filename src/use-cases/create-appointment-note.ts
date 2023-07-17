@@ -19,6 +19,7 @@ export class CreateDetachedNoteUseCase {
 		private notesRepository: DetachedNoteRepository,
 		private userRepository: UserRepository,
 		private patientRepository: PatientRepository,
+		// private appointmentRepository: AppointmentRepository,
 	) { }
 
 	async execute(data: CreateDetachedNoteUseCaseRequest): Promise<CreateDetachedNoteUseCaseResponse> {
