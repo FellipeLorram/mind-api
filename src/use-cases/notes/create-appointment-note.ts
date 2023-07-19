@@ -1,6 +1,6 @@
 import { DetachedNote } from '@prisma/client';
 import { UserRepository } from '@/repositories/user-repository';
-import { ResourceNotFoundError } from './errors/resource-not-found-error';
+import { ResourceNotFoundError } from '../errors/resource-not-found-error';
 import { PatientRepository } from '@/repositories/patient-repository';
 import { DetachedNoteRepository } from '@/repositories/detached-note-repository';
 
@@ -19,6 +19,7 @@ export class CreateDetachedNoteUseCase {
 		private notesRepository: DetachedNoteRepository,
 		private userRepository: UserRepository,
 		private patientRepository: PatientRepository,
+		// private appointmentRepository: AppointmentRepository,
 	) { }
 
 	async execute(data: CreateDetachedNoteUseCaseRequest): Promise<CreateDetachedNoteUseCaseResponse> {

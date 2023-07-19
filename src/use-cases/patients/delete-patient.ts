@@ -1,6 +1,6 @@
 import { PatientRepository } from '@/repositories/patient-repository';
-import { ResourceNotFoundError } from './errors/resource-not-found-error';
-import { InavalidUserError } from './errors/invalid-user-error';
+import { ResourceNotFoundError } from '../errors/resource-not-found-error';
+import { InvalidUserError } from '../errors/invalid-user-error';
 
 
 interface DeletePatientUseCaseRequest {
@@ -21,7 +21,7 @@ export class DeletePatientUseCase {
 		}
 
 		if (patientExists.user_id !== userId) {
-			throw new InavalidUserError();
+			throw new InvalidUserError();
 		}
 
 		await this.patientRepository.delete(patientId);

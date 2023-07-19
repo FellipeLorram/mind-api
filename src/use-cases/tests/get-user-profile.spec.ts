@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository';
-import { GetUserProfileUseCase } from '../get-user-profile';
+import { GetUserProfileUseCase } from '../users/get-user-profile';
 import { ResourceNotFoundError } from '../errors/resource-not-found-error';
 
 let sut: GetUserProfileUseCase;
@@ -21,7 +21,7 @@ describe('Get User Profile Use Case', () => {
 
 		const { user: userProfile } = await sut.execute({ userId: user.id });
 
-		expect(userProfile).toEqual(user);		
+		expect(userProfile).toEqual(user);
 	});
 
 	it('should not get user profile if user does not exists', async () => {

@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { UpdatePatientUseCase } from '../update-patient';
+import { UpdatePatientUseCase } from '../patients/update-patient';
 import { InMemoryPatientsRepository } from '@/repositories/in-memory/in-memory-patients-repository';
 import { Patient } from '@prisma/client';
 import { ResourceNotFoundError } from '../errors/resource-not-found-error';
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository';
-import { InavalidUserError } from '../errors/invalid-user-error';
+import { InvalidUserError } from '../errors/invalid-user-error';
 
 let sut: UpdatePatientUseCase;
 let patientRepository: InMemoryPatientsRepository;
@@ -75,7 +75,7 @@ describe('Update Patient Use Case', () => {
 				age: 30,
 				address: 'Rua 2',
 			}
-		})).rejects.toBeInstanceOf(InavalidUserError);
+		})).rejects.toBeInstanceOf(InvalidUserError);
 	});
 
 	// it('should not be able update patient if user is not authenticated', () => {

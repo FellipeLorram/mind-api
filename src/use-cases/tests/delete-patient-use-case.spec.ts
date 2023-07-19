@@ -1,11 +1,11 @@
 import { describe } from 'node:test';
 import { beforeEach, expect, it } from 'vitest';
-import { DeletePatientUseCase } from '../delete-patient';
+import { DeletePatientUseCase } from '../patients/delete-patient';
 import { InMemoryPatientsRepository } from '@/repositories/in-memory/in-memory-patients-repository';
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository';
 import { PatientRepository } from '@/repositories/patient-repository';
 import { ResourceNotFoundError } from '../errors/resource-not-found-error';
-import { InavalidUserError } from '../errors/invalid-user-error';
+import { InvalidUserError } from '../errors/invalid-user-error';
 
 let sut: DeletePatientUseCase;
 let patientId: string;
@@ -47,7 +47,7 @@ describe('Delete Patient Use Case', () => {
 		});
 
 		const patient = await patientRepository.findById(patientId);
-		
+
 		expect(patient).toBeNull();
 	});
 
@@ -66,6 +66,6 @@ describe('Delete Patient Use Case', () => {
 				userId: 'invalid-user-id',
 				patientId,
 			});
-		}).rejects.toBeInstanceOf(InavalidUserError);
+		}).rejects.toBeInstanceOf(InvalidUserError);
 	});
 });

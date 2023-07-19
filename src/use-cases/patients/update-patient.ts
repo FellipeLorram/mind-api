@@ -1,7 +1,7 @@
 import { PatientRepository } from '@/repositories/patient-repository';
 import { Patient } from '@prisma/client';
-import { ResourceNotFoundError } from './errors/resource-not-found-error';
-import { InavalidUserError } from './errors/invalid-user-error';
+import { ResourceNotFoundError } from '../errors/resource-not-found-error';
+import { InvalidUserError } from '../errors/invalid-user-error';
 
 interface UpdateData {
 	name?: string
@@ -39,8 +39,8 @@ export class UpdatePatientUseCase {
 			throw new ResourceNotFoundError();
 		}
 
-		if(patientExists.user_id !== userId) {
-			throw new InavalidUserError();
+		if (patientExists.user_id !== userId) {
+			throw new InvalidUserError();
 		}
 
 		const patient = await this.patientRepository.update(patientId, {

@@ -1,9 +1,9 @@
-import { Appointment, Patient } from '@prisma/client';
+import { Appointment } from '@prisma/client';
 import { PatientRepository } from '@/repositories/patient-repository';
 import { UserRepository } from '@/repositories/user-repository';
-import { ResourceNotFoundError } from './errors/resource-not-found-error';
+import { ResourceNotFoundError } from '../errors/resource-not-found-error';
 import { AppointmentRepository } from '@/repositories/appointment-repository';
-import { InavalidUserError } from './errors/invalid-user-error';
+import { InvalidUserError } from '../errors/invalid-user-error';
 
 interface CreateAppointmentUseCaseRequest {
 	patientId: string;
@@ -30,13 +30,13 @@ export class CreateAppointmentUseCase {
 			throw new ResourceNotFoundError();
 		}
 
-		if(user.id !== patient.user_id) {
-			throw new InavalidUserError();
+		if (user.id !== patient.user_id) {
+			throw new InvalidUserError();
 		}
 
 		const appointment = await this.appointmentRepository.create({
 			...data,
-			patient_id: data.patientId,			
+			patient_id: data.patientId,
 		});
 
 		return {

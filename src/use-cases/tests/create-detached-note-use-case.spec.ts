@@ -1,6 +1,6 @@
 import { describe } from 'node:test';
 import { beforeEach, expect, it } from 'vitest';
-import { CreateDetachedNoteUseCase } from '../create-detached-note';
+import { CreateDetachedNoteUseCase } from '../notes/create-detached-note';
 import { InMemoryPatientsRepository } from '@/repositories/in-memory/in-memory-patients-repository';
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository';
 import { InMemoryDetachedNotesRepository } from '@/repositories/in-memory/in-memory-detached-notes-repository';

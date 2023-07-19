@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ResourceNotFoundError } from '../errors/resource-not-found-error';
 import { InMemoryPatientsRepository } from '@/repositories/in-memory/in-memory-patients-repository';
-import { GetPatientProfileUseCase } from '../get-patient-profile';
+import { GetPatientProfileUseCase } from '../patients/get-patient-profile';
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository';
 
 let sut: GetPatientProfileUseCase;
@@ -39,7 +39,7 @@ describe('Get Patient Profile Use Case', () => {
 
 		const { patient: patientProfile } = await sut.execute({ patientId: patient.id });
 
-		expect(patientProfile).toEqual(patient);		
+		expect(patientProfile).toEqual(patient);
 	});
 
 	it('should not get patient profile if patient does not exists', async () => {

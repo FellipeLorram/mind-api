@@ -46,18 +46,18 @@ export class InMemoryAppointmentsRepository implements AppointmentRepository {
 	// 	return this.Appointments[AppointmentIndex];
 	// }
 
-	// async delete(id: string) {
-	// 	const AppointmentIndex = this.Appointments.findIndex((Appointment) => Appointment.id === id);
+	async delete(id: string) {
+		const AppointmentIndex = this.Appointments.findIndex((Appointment) => Appointment.id === id);
 
-	// 	if (AppointmentIndex < 0) {
-	// 		throw new Error('Appointment not found');
-	// 	}
+		if (AppointmentIndex < 0) {
+			throw new Error('Appointment not found');
+		}
 
-	// 	this.Appointments.splice(AppointmentIndex, 1);
-	// }
+		this.Appointments.splice(AppointmentIndex, 1);
+	}
 
-	// async findById(id: string) {
-	// 	const Appointment = this.Appointments.find((Appointment) => Appointment.id === id);
-	// 	return Appointment || null;
-	// }
+	async findById(id: string) {
+		const Appointment = this.Appointments.find((Appointment) => Appointment.id === id);
+		return Appointment || null;
+	}
 } 

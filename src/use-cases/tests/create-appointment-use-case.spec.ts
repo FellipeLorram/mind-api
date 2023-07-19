@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { CreateAppointmentUseCase } from '../create-appointment';
+import { CreateAppointmentUseCase } from '../appointments/create-appointment';
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository';
 import { InMemoryPatientsRepository } from '@/repositories/in-memory/in-memory-patients-repository';
 import { InMemoryAppointmentsRepository } from '@/repositories/in-memory/in-memory-appointments-repository';

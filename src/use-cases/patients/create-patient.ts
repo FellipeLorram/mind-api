@@ -1,7 +1,7 @@
 import { Patient } from '@prisma/client';
 import { PatientRepository } from '@/repositories/patient-repository';
 import { UserRepository } from '@/repositories/user-repository';
-import { ResourceNotFoundError } from './errors/resource-not-found-error';
+import { ResourceNotFoundError } from '../errors/resource-not-found-error';
 
 interface CreatePatientUseCaseRequest {
 	name: string
