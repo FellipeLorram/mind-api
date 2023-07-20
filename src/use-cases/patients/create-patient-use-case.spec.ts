@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { CreatePatientUseCase } from '../patients/create-patient';
+import { CreatePatientUseCase } from './create-patient';
 import { PatientRepository } from '@/repositories/patient-repository';
 import { InMemoryPatientsRepository } from '@/repositories/in-memory/in-memory-patients-repository';
 import { UserRepository } from '@/repositories/user-repository';

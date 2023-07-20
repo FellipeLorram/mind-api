@@ -2,10 +2,10 @@ import { Note, Prisma } from '@prisma/client';
 import { NoteRepository } from '../note-repository';
 
 export class InMemoryNotesRepository implements NoteRepository {
-	private Notes: Note[];
+	private notes: Note[];
 
 	constructor() {
-		this.Notes = [];
+		this.notes = [];
 	}
 
 	async create(data: Prisma.NoteUncheckedCreateInput) {
@@ -13,38 +13,28 @@ export class InMemoryNotesRepository implements NoteRepository {
 			...data,
 			createdAt: new Date(),
 			updatedAt: new Date(),
-			id: String(this.Notes.length + 1),
+			id: String(this.notes.length + 1),
 		};
 
-		this.Notes.push(Note);
+		this.notes.push(Note);
 
 		return Note;
 	}
 
-	// async update(id: string, Note: Prisma.NoteUncheckedUpdateInput) {
-	// 	const NoteIndex = this.Notes.findIndex((Note) => Note.id === id);
+	async update(id: string, Note: Prisma.NoteUncheckedUpdateInput) {
+		const noteIndex = this.notes.findIndex((n) => n.id === id);
 
-	// 	if (NoteIndex < 0) {
-	// 		throw new Error('Note not found');
-	// 	}
+		if (noteIndex < 0) {
+			throw new Error('Note not found');
+		}
 
-	// 	this.Notes[NoteIndex] = {
-	// 		...this.Notes[NoteIndex],
-	// 		address: Note.address ? Note.address as string : this.Notes[NoteIndex].address,
-	// 		age: Note.age ? Note.age as number : this.Notes[NoteIndex].age,
-	// 		appointment_duration: Note.appointment_duration ? Note.appointment_duration as number : this.Notes[NoteIndex].appointment_duration,
-	// 		appointment_time: Note.appointment_time ? new Date(Note.appointment_time as string) : this.Notes[NoteIndex].appointment_time,
-	// 		email: Note.email ? Note.email as string : this.Notes[NoteIndex].email,
-	// 		name: Note.name ? Note.name as string : this.Notes[NoteIndex].name,
-	// 		birthDate: Note.birthDate ? new Date(Note.birthDate as string) : this.Notes[NoteIndex].birthDate,
-	// 		gender: Note.gender ? Note.gender as string : this.Notes[NoteIndex].gender,
-	// 		modality: Note.modality ? Note.modality as string : this.Notes[NoteIndex].modality,
-	// 		nationality: Note.nationality ? Note.nationality as string : this.Notes[NoteIndex].nationality,
-	// 		observation: Note.observation ? Note.observation as string : this.Notes[NoteIndex].observation,
-	// 	};
+		this.notes[noteIndex] = {
+			...this.notes[noteIndex],
+			content: Note.content ? Note.content as string : this.notes[noteIndex].content,
+		};
 
-	// 	return this.Notes[NoteIndex];
-	// }
+		return this.notes[noteIndex];
+	}
 
 	// async delete(id: string) {
 	// 	const NoteIndex = this.Notes.findIndex((Note) => Note.id === id);
@@ -56,8 +46,8 @@ export class InMemoryNotesRepository implements NoteRepository {
 	// 	this.Notes.splice(NoteIndex, 1);
 	// }
 
-	// async findById(id: string) {
-	// 	const Note = this.Notes.find((Note) => Note.id === id);
-	// 	return Note || null;
-	// }
+	async findById(id: string) {
+		const Note = this.notes.find((n) => n.id === id);
+		return Note || null;
+	}
 } 

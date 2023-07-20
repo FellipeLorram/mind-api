@@ -61,7 +61,7 @@ export class InMemoryPatientsRepository implements PatientRepository {
 		const patientIndex = this.patients.findIndex((patient) => patient.id === id);
 
 		if (patientIndex < 0) {
-			throw new Error('Patient not found');
+			return;
 		}
 
 		this.patients.splice(patientIndex, 1);

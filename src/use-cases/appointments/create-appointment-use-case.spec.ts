@@ -1,27 +1,23 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { GetAppointmentUseCase } from '../appointments/get-appointment';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { CreateAppointmentUseCase } from './create-appointment';
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository';
-import { InMemoryAppointmentsRepository } from '@/repositories/in-memory/in-memory-appointments-repository';
 import { InMemoryPatientsRepository } from '@/repositories/in-memory/in-memory-patients-repository';
+import { InMemoryAppointmentsRepository } from '@/repositories/in-memory/in-memory-appointments-repository';
 import { ResourceNotFoundError } from '../errors/resource-not-found-error';
-import { InvalidUserError } from '../errors/invalid-user-error';
-import { InvalidPatientError } from '../errors/invalid-patient-error';
 
-let sut: GetAppointmentUseCase;
-let appointmentId: string;
-let patientId: string;
+let sut: CreateAppointmentUseCase;
 let userId: string;
+let patientId: string;
 
-describe('Get Appointment Use Case', () => {
+describe('Create Appointment Use Case', () => {
 	beforeEach(async () => {
 		const userRepository = new InMemoryUsersRepository();
 		const patientRepository = new InMemoryPatientsRepository();
 		const appointmentRepository = new InMemoryAppointmentsRepository();
-
-		sut = new GetAppointmentUseCase(
-			appointmentRepository,
+		sut = new CreateAppointmentUseCase(
 			patientRepository,
 			userRepository,
+			appointmentRepository,
 		);
 
 		const user = await userRepository.create({
@@ -39,18 +35,12 @@ describe('Get Appointment Use Case', () => {
 			modality: 'Presencial'
 		});
 
-		const appointment = await appointmentRepository.create({
-			patient_id: patient.id,
-		});
-
 		userId = user.id;
 		patientId = patient.id;
-		appointmentId = appointment.id;
 	});
 
-	it('should be able to get a appointment', async () => {
+	it('should create a new appointment', async () => {
 		const appointment = await sut.execute({
-			appointmentId,
 			patientId,
 			userId,
 		});
@@ -58,27 +48,24 @@ describe('Get Appointment Use Case', () => {
 		expect(appointment).toBeDefined();
 	});
 
-	it('should not be able to get a appointment with invalid id', async () => {
+	it('should not be able create a new appointment with invalid user', async () => {
 		await expect(() => sut.execute({
-			appointmentId: 'invalid_id',
 			patientId,
+			userId: 'invalid_user_id',
+		})).rejects.toBeInstanceOf(ResourceNotFoundError);
+	});
+
+	it('should not be able create a new appointment with invalid patient', async () => {
+		await expect(() => sut.execute({
+			patientId: 'invalid_patient_id',
 			userId,
 		})).rejects.toBeInstanceOf(ResourceNotFoundError);
 	});
 
-	it('should not be able to get a appointment with invalid user', async () => {
+	it('should not create a new appointment with invalid date', async () => {
 		await expect(() => sut.execute({
-			appointmentId,
 			patientId,
-			userId: 'invalid_id',
-		})).rejects.toBeInstanceOf(InvalidUserError);
-	});
-
-	it('should not be able to get a appointment with invalid patient', async () => {
-		await expect(() => sut.execute({
-			appointmentId,
-			patientId: 'invalid_id',
 			userId,
-		})).rejects.toBeInstanceOf(InvalidPatientError);
+		})).rejects.toBeInstanceOf(Error);
 	});
 });

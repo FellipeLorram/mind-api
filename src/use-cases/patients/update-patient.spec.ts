@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { UpdatePatientUseCase } from '../patients/update-patient';
+import { UpdatePatientUseCase } from './update-patient';
 import { InMemoryPatientsRepository } from '@/repositories/in-memory/in-memory-patients-repository';
 import { Patient } from '@prisma/client';
 import { ResourceNotFoundError } from '../errors/resource-not-found-error';

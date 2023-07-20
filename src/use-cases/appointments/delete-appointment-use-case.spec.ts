@@ -3,7 +3,7 @@ import { beforeEach, expect, it } from 'vitest';
 import { InMemoryPatientsRepository } from '@/repositories/in-memory/in-memory-patients-repository';
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository';
 
-import { DeleteAppointmentUseCase } from '../appointments/delete-appointment';
+import { DeleteAppointmentUseCase } from './delete-appointment';
 import { InMemoryAppointmentsRepository } from '@/repositories/in-memory/in-memory-appointments-repository';
 import { ResourceNotFoundError } from '../errors/resource-not-found-error';
 
