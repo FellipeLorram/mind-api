@@ -6,11 +6,13 @@ import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-user
 import { DeleteAppointmentUseCase } from './delete-appointment';
 import { InMemoryAppointmentsRepository } from '@/repositories/in-memory/in-memory-appointments-repository';
 import { ResourceNotFoundError } from '../errors/resource-not-found-error';
+import { InvalidPatientError } from '../errors/invalid-patient-error';
 
 let sut: DeleteAppointmentUseCase;
 let patientId: string;
 let userId: string;
 let appointmentId: string;
+let anotherPatientId: string;
 let appointmentRepository: InMemoryAppointmentsRepository;
 
 describe('Delete Appointment Use Case', () => {
@@ -49,6 +51,18 @@ describe('Delete Appointment Use Case', () => {
 			patient_id: patientId,
 		});
 
+		const anotherPatient = await patientRepository.create({
+			name: 'John Doesnt',
+			email: 'johndoesnt@example.com',
+			age: 20,
+			appointment_duration: 30,
+			address: 'Rua 5',
+			appointment_time: new Date(),
+			modality: 'Presencial',
+			user_id: user.id,
+		});
+
+		anotherPatientId = anotherPatient.id;
 		appointmentId = appointment.id;
 	});
 
@@ -65,32 +79,34 @@ describe('Delete Appointment Use Case', () => {
 	});
 
 	it('should not be able to delete a appointment with invalid id', async () => {
-		await expect(async () => {
-			await sut.execute({
-				userId,
-				patientId,
-				appointmentId: 'invalid-id',
-			});
-		}).rejects.toBeInstanceOf(ResourceNotFoundError);
+		await expect(() => sut.execute({
+			userId,
+			patientId,
+			appointmentId: 'invalid-id',
+		})).rejects.toBeInstanceOf(ResourceNotFoundError);
 	});
 
 	it('should not be able to delete a appointment with invalid user', async () => {
-		await expect(async () => {
-			await sut.execute({
-				userId: 'invalid-id',
-				patientId,
-				appointmentId,
-			});
-		}).rejects.toBeInstanceOf(ResourceNotFoundError);
+		await expect(() => sut.execute({
+			userId: 'invalid-id',
+			patientId,
+			appointmentId,
+		})).rejects.toBeInstanceOf(ResourceNotFoundError);
 	});
 
-	it('should not be able to delete a appointment with invalid patient', () => {
-		expect(async () => {
-			await sut.execute({
-				userId,
-				patientId: 'invalid-id',
-				appointmentId,
-			});
-		}).rejects.toBeInstanceOf(ResourceNotFoundError);
+	it('should not be able to delete a appointment with invalid patient', async () => {
+		await expect(() => sut.execute({
+			userId,
+			patientId: 'invalid-id',
+			appointmentId,
+		})).rejects.toBeInstanceOf(ResourceNotFoundError);
+	});
+
+	it('should not be able to delete a appointment if the patient is not the owner', async () => {
+		await expect(() => sut.execute({
+			userId,
+			patientId: anotherPatientId,
+			appointmentId,
+		})).rejects.toBeInstanceOf(InvalidPatientError);
 	});
 });

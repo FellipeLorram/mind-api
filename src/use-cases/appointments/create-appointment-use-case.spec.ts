@@ -7,6 +7,7 @@ import { ResourceNotFoundError } from '../errors/resource-not-found-error';
 
 let sut: CreateAppointmentUseCase;
 let userId: string;
+let anotherUserId: string;
 let patientId: string;
 
 describe('Create Appointment Use Case', () => {
@@ -26,6 +27,12 @@ describe('Create Appointment Use Case', () => {
 			password: 'any_password',
 		});
 
+		const anotherUser = await userRepository.create({
+			name: 'any_name',
+			email: 'another@email.com',
+			password: 'any_password',
+		});
+
 		const patient = await patientRepository.create({
 			user_id: user.id,
 			age: 10,
@@ -37,6 +44,7 @@ describe('Create Appointment Use Case', () => {
 
 		userId = user.id;
 		patientId = patient.id;
+		anotherUserId = anotherUser.id;
 	});
 
 	it('should create a new appointment', async () => {
@@ -55,17 +63,17 @@ describe('Create Appointment Use Case', () => {
 		})).rejects.toBeInstanceOf(ResourceNotFoundError);
 	});
 
+	it('Shoult not be able to create a new appointment if the user is not the patients owner', async () => {
+		await expect(() => sut.execute({
+			patientId,
+			userId: anotherUserId,
+		})).rejects.toBeInstanceOf(ResourceNotFoundError);
+	});
+
 	it('should not be able create a new appointment with invalid patient', async () => {
 		await expect(() => sut.execute({
 			patientId: 'invalid_patient_id',
 			userId,
 		})).rejects.toBeInstanceOf(ResourceNotFoundError);
-	});
-
-	it('should not create a new appointment with invalid date', async () => {
-		await expect(() => sut.execute({
-			patientId,
-			userId,
-		})).rejects.toBeInstanceOf(Error);
 	});
 });

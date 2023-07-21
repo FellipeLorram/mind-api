@@ -4,12 +4,12 @@ import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-user
 import { InMemoryAppointmentsRepository } from '@/repositories/in-memory/in-memory-appointments-repository';
 import { InMemoryPatientsRepository } from '@/repositories/in-memory/in-memory-patients-repository';
 import { ResourceNotFoundError } from '../errors/resource-not-found-error';
-import { InvalidUserError } from '../errors/invalid-user-error';
 import { InvalidPatientError } from '../errors/invalid-patient-error';
 
 let sut: GetAppointmentUseCase;
 let appointmentId: string;
 let patientId: string;
+let anotherPatientId: string;
 let userId: string;
 
 describe('Get Appointment Use Case', () => {
@@ -39,12 +39,22 @@ describe('Get Appointment Use Case', () => {
 			modality: 'Presencial'
 		});
 
+		const anotherPatient = await patientRepository.create({
+			user_id: user.id,
+			age: 10,
+			name: 'john doe',
+			appointment_duration: 30,
+			appointment_time: new Date(),
+			modality: 'Presencial'
+		});
+
 		const appointment = await appointmentRepository.create({
 			patient_id: patient.id,
 		});
 
 		userId = user.id;
 		patientId = patient.id;
+		anotherPatientId = anotherPatient.id;
 		appointmentId = appointment.id;
 	});
 
@@ -71,7 +81,7 @@ describe('Get Appointment Use Case', () => {
 			appointmentId,
 			patientId,
 			userId: 'invalid_id',
-		})).rejects.toBeInstanceOf(InvalidUserError);
+		})).rejects.toBeInstanceOf(ResourceNotFoundError);
 	});
 
 	it('should not be able to get a appointment with invalid patient', async () => {
@@ -79,6 +89,15 @@ describe('Get Appointment Use Case', () => {
 			appointmentId,
 			patientId: 'invalid_id',
 			userId,
+		})).rejects.toBeInstanceOf(ResourceNotFoundError);
+	});
+
+	
+	it('should not be able to delete a appointment if the patient is not the owner', async () => {
+		await expect(() => sut.execute({
+			userId,
+			patientId: anotherPatientId,
+			appointmentId,
 		})).rejects.toBeInstanceOf(InvalidPatientError);
 	});
 });

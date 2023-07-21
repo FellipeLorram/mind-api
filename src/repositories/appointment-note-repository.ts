@@ -1,6 +1,6 @@
 import { Note, Prisma } from '@prisma/client';
 
-export interface NoteRepository {
+export interface AppointmentNoteRepository {
 	findById(id: string): Promise<Note | null>;
 	create(Note: Prisma.NoteUncheckedCreateInput): Promise<Note>;
 	update(noteid: string, note: Prisma.NoteUncheckedUpdateInput): Promise<Note>;

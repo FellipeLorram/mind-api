@@ -1,38 +1,41 @@
-import { DetachedNote } from '@prisma/client';
+import { Note } from '@prisma/client';
 import { UserRepository } from '@/repositories/user-repository';
 import { ResourceNotFoundError } from '../errors/resource-not-found-error';
 import { PatientRepository } from '@/repositories/patient-repository';
-import { DetachedNoteRepository } from '@/repositories/detached-note-repository';
+import { AppointmentNoteRepository } from '@/repositories/appointment-note-repository';
+import { AppointmentRepository } from '@/repositories/appointment-repository';
 
-interface CreateDetachedNoteUseCaseRequest {
+interface CreateAppointmentNoteUseCaseRequest {
 	content: string;
 	patientId: string;
+	appointmentId: string;
 	userId: string;
 }
 
-interface CreateDetachedNoteUseCaseResponse {
-	note: DetachedNote;
+interface CreateAppointmentNoteUseCaseResponse {
+	note: Note;
 }
 
-export class CreateDetachedNoteUseCase {
+export class CreateAppointmentNoteUseCase {
 	constructor(
-		private notesRepository: DetachedNoteRepository,
+		private notesRepository: AppointmentNoteRepository,
 		private userRepository: UserRepository,
 		private patientRepository: PatientRepository,
-		// private appointmentRepository: AppointmentRepository,
+		private appointmentRepository: AppointmentRepository,
 	) { }
 
-	async execute(data: CreateDetachedNoteUseCaseRequest): Promise<CreateDetachedNoteUseCaseResponse> {
+	async execute(data: CreateAppointmentNoteUseCaseRequest): Promise<CreateAppointmentNoteUseCaseResponse> {
 		const user = await this.userRepository.findById(data.userId);
 		const patient = await this.patientRepository.findById(data.patientId);
+		const appointment = await this.appointmentRepository.findById(data.appointmentId);
 
-		if (!user || !patient) {
+		if (!user || !patient || !appointment) {
 			throw new ResourceNotFoundError();
 		}
 
 		const note = await this.notesRepository.create({
 			content: data.content,
-			patient_id: data.patientId,
+			appointment_id: data.appointmentId,
 		});
 
 		return {

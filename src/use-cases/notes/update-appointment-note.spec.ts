@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { UpdateAppointmentNoteUseCase } from './update-appointment-note';
 import { InMemoryAppointmentsRepository } from '@/repositories/in-memory/in-memory-appointments-repository';
-import { InMemoryNotesRepository } from '@/repositories/in-memory/in-memory-notes-repository';
+import { InMemoryAppointmentNotesRepository } from '@/repositories/in-memory/in-memory-notes-repository';
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository';
 import { ResourceNotFoundError } from '../errors/resource-not-found-error';
 
@@ -10,9 +10,9 @@ let appointmentId: string;
 let noteId: string;
 let userId: string;
 
-describe('Update appointment note', () => {
+describe('Update Appointment Note Use Case', () => {
 	beforeEach(async () => {
-		const appointmentNotesRepository = new InMemoryNotesRepository();
+		const appointmentNotesRepository = new InMemoryAppointmentNotesRepository();
 		const appointmentsRepository = new InMemoryAppointmentsRepository();
 		const usersRepository = new InMemoryUsersRepository();
 

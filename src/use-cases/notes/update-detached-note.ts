@@ -8,6 +8,7 @@ interface UpdateDetachedNoteUseCaseRequest {
 	content: string;
 	patientId: string;
 	userId: string;
+	noteId: string;
 }
 
 interface UpdateDetachedNoteUseCaseResponse {
@@ -24,13 +25,13 @@ export class UpdateDetachedNoteUseCase {
 	async execute(data: UpdateDetachedNoteUseCaseRequest): Promise<UpdateDetachedNoteUseCaseResponse> {
 		const user = await this.userRepository.findById(data.userId);
 		const patient = await this.patientRepository.findById(data.patientId);
-		const noteExists = await this.notesRepository.findById(data.patientId);
+		const noteExists = await this.notesRepository.findById(data.noteId);
 
 		if (!user || !patient || !noteExists) {
 			throw new ResourceNotFoundError();
 		}
 
-		const note = await this.notesRepository.update(data.patientId, {
+		const note = await this.notesRepository.update(data.noteId, {
 			content: data.content,
 		});
 

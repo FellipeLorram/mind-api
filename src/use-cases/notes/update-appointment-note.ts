@@ -1,7 +1,7 @@
 import { AppointmentRepository } from '@/repositories/appointment-repository';
 import { Note } from '@prisma/client';
 import { ResourceNotFoundError } from '../errors/resource-not-found-error';
-import { NoteRepository } from '@/repositories/note-repository';
+import { AppointmentNoteRepository } from '@/repositories/appointment-note-repository';
 import { UserRepository } from '@/repositories/user-repository';
 
 interface UpdateAppointmentNoteUseCaseRequest {
@@ -18,7 +18,7 @@ interface UpdateAppointmentNoteUseCaseResponse {
 
 export class UpdateAppointmentNoteUseCase {
 	constructor(
-		private noteRepository: NoteRepository,
+		private noteRepository: AppointmentNoteRepository,
 		private appointmentRepository: AppointmentRepository,
 		private usersRepository: UserRepository
 	) { }

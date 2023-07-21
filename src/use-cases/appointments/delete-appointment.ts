@@ -1,8 +1,8 @@
 import { AppointmentRepository } from '@/repositories/appointment-repository';
 import { ResourceNotFoundError } from '../errors/resource-not-found-error';
-import { InvalidUserError } from '../errors/invalid-user-error';
 import { PatientRepository } from '@/repositories/patient-repository';
 import { UserRepository } from '@/repositories/user-repository';
+import { InvalidPatientError } from '../errors/invalid-patient-error';
 
 
 interface DeleteAppointmentUseCaseRequest {
@@ -23,16 +23,17 @@ export class DeleteAppointmentUseCase {
 		const user = await this.appointmentRepository.findById(userId);
 		const patient = await this.patientRepository.findById(patientId);
 
-		if (!AppointmentExists || !user || !patient) {
+		if (
+			!AppointmentExists
+			|| !user
+			|| !patient
+			|| user.id !== patient.user_id
+		) {
 			throw new ResourceNotFoundError();
 		}
 
-		if (user.id !== patient.user_id) {
-			throw new InvalidUserError();
-		}
-
 		if (AppointmentExists.patient_id !== patientId) {
-			throw new InvalidUserError();
+			throw new InvalidPatientError();
 		}
 
 		await this.appointmentRepository.delete(appointmentId);

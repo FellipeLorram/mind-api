@@ -1,7 +1,7 @@
 import { Note, Prisma } from '@prisma/client';
-import { NoteRepository } from '../note-repository';
+import { AppointmentNoteRepository } from '../appointment-note-repository';
 
-export class InMemoryNotesRepository implements NoteRepository {
+export class InMemoryAppointmentNotesRepository implements AppointmentNoteRepository {
 	private notes: Note[];
 
 	constructor() {
