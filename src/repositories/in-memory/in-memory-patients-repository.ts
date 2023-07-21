@@ -71,4 +71,10 @@ export class InMemoryPatientsRepository implements PatientRepository {
 		const patient = this.patients.find((patient) => patient.id === id);
 		return patient || null;
 	}
+
+	async list(userId: string, page: number) {
+		const patients = this.patients.filter((patient) => patient.user_id === userId);
+
+		return patients.slice((page - 1) * 20, page * 20);
+	}
 } 
