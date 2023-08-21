@@ -5,4 +5,5 @@ export interface AppointmentRepository {
 	create(Note: Prisma.AppointmentUncheckedCreateInput): Promise<Appointment>;
 	delete(id: string): Promise<void>;
 	list(patientId: string, page: number): Promise<Appointment[]>;
+	update(id: string, data: Prisma.AppointmentUncheckedUpdateInput): Promise<Appointment | null>;
 }

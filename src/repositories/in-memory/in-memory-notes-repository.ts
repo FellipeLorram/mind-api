@@ -46,6 +46,15 @@ export class InMemoryAppointmentNotesRepository implements AppointmentNoteReposi
 	// 	this.Notes.splice(NoteIndex, 1);
 	// }
 
+	async list(appointmentId: string, page: number) {
+		const notes = this.notes.filter((n) => n.appointment_id === appointmentId);
+
+		const offset = (page - 1) * 20;
+		const limit = 20;
+
+		return notes.slice(offset, offset + limit);
+	}
+
 	async findById(id: string) {
 		const Note = this.notes.find((n) => n.id === id);
 		return Note || null;

@@ -11,6 +11,7 @@ export class InMemoryAppointmentsRepository implements AppointmentRepository {
 	async create(data: Prisma.AppointmentUncheckedCreateInput) {
 		const appointment: Appointment = {
 			...data,
+			appointment_time: data.appointment_time as Date,
 			createdAt: new Date(),
 			updatedAt: new Date(),
 			id: String(this.Appointments.length + 1),
@@ -40,5 +41,25 @@ export class InMemoryAppointmentsRepository implements AppointmentRepository {
 	async findById(id: string) {
 		const Appointment = this.Appointments.find((Appointment) => Appointment.id === id);
 		return Appointment || null;
+	}
+
+	async update(id: string, data: Prisma.AppointmentUncheckedUpdateInput) {
+		const AppointmentIndex = this.Appointments.findIndex((Appointment) => Appointment.id === id);
+
+		if (AppointmentIndex < 0) {
+			return null;
+		}
+
+		const Appointment: Appointment = {
+			...this.Appointments[AppointmentIndex],
+			appointment_time: data.appointment_time ? data.appointment_time as Date : this.Appointments[AppointmentIndex].appointment_time,
+			updatedAt: new Date(),
+			id: id as string,
+			patient_id: this.Appointments[AppointmentIndex].patient_id as string,
+		};
+
+		this.Appointments[AppointmentIndex] = Appointment;
+
+		return Appointment;
 	}
 } 

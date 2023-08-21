@@ -1,5 +1,4 @@
-import { describe } from 'node:test';
-import { beforeEach, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { DeletePatientUseCase } from './delete-patient';
 import { InMemoryPatientsRepository } from '@/repositories/in-memory/in-memory-patients-repository';
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository';

@@ -39,4 +39,28 @@ export class PrismaPatientRepository implements PatientRepository {
 			},
 		});
 	}
+
+	async list(userId: string, page: number, query: string) {
+		const patients = await prisma.patient.findMany({
+			where: {
+				user_id: userId,
+				OR: [
+					{
+						name: {
+							contains: query,
+						},
+					},
+					{
+						email: {
+							contains: query,
+						},
+					},
+				],
+			},
+			skip: (page - 1) * 10,
+			take: 10,
+		});
+
+		return patients;
+	}
 }

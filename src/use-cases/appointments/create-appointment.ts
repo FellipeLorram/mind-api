@@ -7,6 +7,7 @@ import { AppointmentRepository } from '@/repositories/appointment-repository';
 interface CreateAppointmentUseCaseRequest {
 	patientId: string;
 	userId: string;
+	date: Date;
 }
 
 
@@ -30,6 +31,7 @@ export class CreateAppointmentUseCase {
 		}
 
 		const appointment = await this.appointmentRepository.create({
+			appointment_time: data.date,
 			...data,
 			patient_id: data.patientId,
 		});
