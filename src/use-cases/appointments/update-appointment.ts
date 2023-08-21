@@ -5,13 +5,14 @@ import { ResourceNotFoundError } from '../errors/resource-not-found-error';
 import { PatientRepository } from '@/repositories/patient-repository';
 
 interface UpdateData {
-	date: Date;
+	appointment_time: Date;
 }
 
 
 interface UpdateAppointmentsUseCaseRequest {
 	userId: string;
 	patientId: string;
+	appointmentId: string;
 	data: UpdateData;
 }
 
@@ -27,7 +28,7 @@ export class UpdateAppointmentsUseCase {
 	) { }
 
 	async execute(data: UpdateAppointmentsUseCaseRequest): Promise<UpdateAppointmentsUseCaseResponse> {
-		const { userId, patientId, data: updateData } = data;
+		const { userId, patientId, appointmentId, data: updateData } = data;
 
 		const user = await this.usersRepository.findById(userId);
 		if (!user) {
@@ -39,8 +40,8 @@ export class UpdateAppointmentsUseCase {
 			throw new ResourceNotFoundError();
 		}
 
-		const appointment = await this.appointmentRepository.update(patientId, {
-			appointment_time: updateData.date
+		const appointment = await this.appointmentRepository.update(appointmentId, {
+			appointment_time: updateData.appointment_time
 		});
 
 		return {
