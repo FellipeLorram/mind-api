@@ -44,6 +44,7 @@ describe('List Appointments Use Case', () => {
 		for (let i = 0; i < 30; i++) {
 			await appointmentRepository.create({
 				patient_id: patientId,
+				appointment_time: new Date(),
 			});
 		}
 
