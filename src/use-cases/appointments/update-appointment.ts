@@ -30,6 +30,11 @@ export class UpdateAppointmentsUseCase {
 	async execute(data: UpdateAppointmentsUseCaseRequest): Promise<UpdateAppointmentsUseCaseResponse> {
 		const { userId, patientId, appointmentId, data: updateData } = data;
 
+		const appointmentExists = await this.appointmentRepository.findById(appointmentId);
+		if (!appointmentExists) {
+			throw new ResourceNotFoundError();
+		}
+
 		const user = await this.usersRepository.findById(userId);
 		if (!user) {
 			throw new ResourceNotFoundError();
